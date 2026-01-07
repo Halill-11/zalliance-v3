@@ -12,37 +12,41 @@ import { Textarea } from '@/components/ui/textarea';
 import { api } from '@/lib/api-client';
 import { Product } from '@shared/types';
 import { useAppStore } from '@/lib/store';
-import { Loader2, Trash2, Plus, Lock } from 'lucide-react';
+import { Loader2, Trash2, Plus, Lock, Pencil } from 'lucide-react';
 import { toast } from 'sonner';
-// Schema for adding a product
+import { ImageUpload } from '@/components/ImageUpload';
+// Schema for adding/editing a product
+// Removed .url() validation to allow Base64 strings
 const productSchema = z.object({
   name: z.string().min(2, 'Le nom est requis'),
   description: z.string().min(10, 'La description est requise'),
   price: z.number().min(1, 'Le prix doit être positif'),
   category: z.string().min(2, 'La catégorie est requise'),
-  imageUrl: z.string().url('Doit être une URL valide'),
+  imageUrl: z.string().min(1, 'Une image est requise'),
   sizes: z.string().optional(), // Comma separated
 });
 // Explicitly define the interface to match the schema
 type ProductFormValues = z.infer<typeof productSchema>;
+const defaultValues: ProductFormValues = {
+  name: '',
+  description: '',
+  price: 0,
+  category: '',
+  imageUrl: '',
+  sizes: 'S, M, L, XL',
+};
 export function AdminDashboard() {
   const isAdmin = useAppStore((s) => s.isAdmin);
   const login = useAppStore((s) => s.login);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   // Mock Login State
   const [password, setPassword] = useState('');
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
-    defaultValues: {
-      name: '',
-      description: '',
-      price: 0,
-      category: '',
-      imageUrl: '',
-      sizes: 'S, M, L, XL',
-    },
+    defaultValues,
   });
   const fetchProducts = async () => {
     try {
@@ -70,31 +74,52 @@ export function AdminDashboard() {
       toast.error('Mot de passe invalide');
     }
   };
+  const handleEdit = (product: Product) => {
+    setEditingProduct(product);
+    form.reset({
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      category: product.category,
+      imageUrl: product.images[0] || '',
+      sizes: product.sizes.join(', '),
+    });
+    setIsDialogOpen(true);
+  };
   const onSubmit = async (values: ProductFormValues) => {
     try {
-      const newProduct = {
+      const productData = {
         ...values,
         images: [values.imageUrl],
         sizes: values.sizes ? values.sizes.split(',').map(s => s.trim()).filter(Boolean) : [],
         inStock: true,
       };
-      // Explicitly typed API call
-      await api<Product>('/api/products', {
-        method: 'POST',
-        body: JSON.stringify(newProduct),
-      });
-      toast.success('Produit ajouté avec succès');
+      if (editingProduct) {
+        // Update existing product
+        await api<Product>(`/api/products/${editingProduct.id}`, {
+          method: 'PUT',
+          body: JSON.stringify(productData),
+        });
+        toast.success('Produit modifié avec succ��s');
+      } else {
+        // Create new product
+        await api<Product>('/api/products', {
+          method: 'POST',
+          body: JSON.stringify(productData),
+        });
+        toast.success('Produit ajouté avec succès');
+      }
       setIsDialogOpen(false);
-      form.reset();
+      form.reset(defaultValues);
+      setEditingProduct(null);
       fetchProducts();
     } catch (err) {
-      toast.error('Erreur lors de l\'ajout du produit');
+      toast.error(editingProduct ? 'Erreur lors de la modification' : 'Erreur lors de l\'ajout');
     }
   };
   const handleDelete = async (id: string) => {
     if (!confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) return;
     try {
-      // Explicitly typed API call
       await api<{ id: string; deleted: boolean }>(`/api/products/${id}`, { method: 'DELETE' });
       toast.success('Produit supprimé');
       setProducts(products.filter(p => p.id !== id));
@@ -133,44 +158,71 @@ export function AdminDashboard() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-slate-900">Gestion des Produits</h1>
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <Dialog 
+            open={isDialogOpen} 
+            onOpenChange={(open) => {
+              setIsDialogOpen(open);
+              if (!open) {
+                setEditingProduct(null);
+                form.reset(defaultValues);
+              }
+            }}
+          >
             <DialogTrigger asChild>
               <Button className="bg-amber-600 hover:bg-amber-700">
                 <Plus className="mr-2 h-4 w-4" /> Ajouter un Produit
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[500px]">
+            <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle>Ajouter un Nouveau Produit</DialogTitle>
+                <DialogTitle>{editingProduct ? 'Modifier le Produit' : 'Ajouter un Nouveau Produit'}</DialogTitle>
               </DialogHeader>
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                   <FormField
                     control={form.control}
-                    name="name"
+                    name="imageUrl"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Nom</FormLabel>
+                        <FormLabel>Image du Produit</FormLabel>
                         <FormControl>
-                          <Input placeholder="Nom du produit" {...field} />
+                          <ImageUpload 
+                            value={field.value} 
+                            onChange={field.onChange} 
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  <FormField
-                    control={form.control}
-                    name="category"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Catégorie</FormLabel>
-                        <FormControl>
-                          <Input placeholder="ex: Boubou, Sénateur" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Nom</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Nom du produit" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="category"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Catégorie</FormLabel>
+                          <FormControl>
+                            <Input placeholder="ex: Boubou, Sénateur" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                   <FormField
                     control={form.control}
                     name="price"
@@ -196,20 +248,7 @@ export function AdminDashboard() {
                       <FormItem>
                         <FormLabel>Description</FormLabel>
                         <FormControl>
-                          <Textarea placeholder="Description du produit..." {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="imageUrl"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>URL de l'image</FormLabel>
-                        <FormControl>
-                          <Input placeholder="https://..." {...field} />
+                          <Textarea placeholder="Description du produit..." className="h-24" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -228,7 +267,9 @@ export function AdminDashboard() {
                       </FormItem>
                     )}
                   />
-                  <Button type="submit" className="w-full bg-slate-900">Créer le Produit</Button>
+                  <Button type="submit" className="w-full bg-slate-900">
+                    {editingProduct ? 'Enregistrer les modifications' : 'Créer le Produit'}
+                  </Button>
                 </form>
               </Form>
             </DialogContent>
@@ -254,19 +295,36 @@ export function AdminDashboard() {
                 {products.map((product) => (
                   <TableRow key={product.id}>
                     <TableCell>
-                      <img
-                        src={product.images?.[0] || 'https://placehold.co/100x100?text=No+Img'}
-                        alt={product.name}
-                        className="h-12 w-12 object-cover rounded"
-                      />
+                      <div className="h-12 w-12 rounded overflow-hidden bg-slate-100">
+                        <img
+                          src={product.images?.[0] || 'https://placehold.co/100x100?text=No+Img'}
+                          alt={product.name}
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
                     </TableCell>
                     <TableCell className="font-medium">{product.name}</TableCell>
                     <TableCell>{product.category}</TableCell>
                     <TableCell>{new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF' }).format(product.price)}</TableCell>
                     <TableCell className="text-right">
-                      <Button variant="ghost" size="icon" onClick={() => handleDelete(product.id)} className="text-red-500 hover:text-red-700 hover:bg-red-50">
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      <div className="flex justify-end gap-2">
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          onClick={() => handleEdit(product)}
+                          className="text-blue-600 hover:text-blue-800 hover:bg-blue-50"
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          onClick={() => handleDelete(product.id)} 
+                          className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
