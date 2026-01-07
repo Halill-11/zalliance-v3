@@ -21,14 +21,44 @@ export function Navbar() {
           <div className="flex-shrink-0">
             <Link to="/" className="flex items-center gap-2 group">
               {/*
-                  TODO: Replace the src below with your actual logo file path or hosted URL.
-                  Currently using a data URI placeholder to ensure visibility.
+                  LOGO CONFIGURATION:
+                  Currently using an inline SVG for immediate visibility and performance.
+                  To use a custom image file (PNG/JPG/SVG):
+                  1. Comment out or remove the <svg> block below.
+                  2. Uncomment the <img> tag below and update the 'src' attribute.
+                  <img
+                    src="/path/to/your/logo.png"
+                    alt="ZALLIANCE"
+                    className="h-10 w-auto object-contain"
+                  />
               */}
-              <img
-                src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCAxNTAgNDAiPgogIDxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNmZmZmZmYiLz4KICA8dGV4dCB4PSI1MCUiIHk9IjUwJSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjMEYxNzJBIj5aQUxMSUFOQ0U8L3RleHQ+Cjwvc3ZnPg=="
-                alt="ZALLIANCE"
-                className="h-10 w-auto object-contain"
-              />
+              <svg
+                viewBox="0 0 190 40"
+                className="h-8 md:h-10 w-auto transition-transform duration-300 group-hover:scale-105"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-label="ZALLIANCE Logo"
+              >
+                <text
+                  x="2"
+                  y="28"
+                  className="fill-slate-900 dark:fill-white"
+                  style={{
+                    fontFamily: 'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif',
+                    fontWeight: 'bold',
+                    letterSpacing: '0.05em',
+                    fontSize: '26px'
+                  }}
+                >
+                  ZALLIANCE
+                </text>
+                <rect
+                  x="2"
+                  y="34"
+                  width="155"
+                  height="2"
+                  className="fill-amber-600"
+                />
+              </svg>
             </Link>
           </div>
           {/* Desktop Navigation */}
