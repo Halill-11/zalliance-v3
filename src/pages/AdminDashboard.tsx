@@ -23,7 +23,7 @@ const productSchema = z.object({
   imageUrl: z.string().url('Doit être une URL valide'),
   sizes: z.string().optional(), // Comma separated
 });
-// Explicitly infer the type to ensure compatibility with useForm
+// Explicitly define the interface to match the schema
 type ProductFormValues = z.infer<typeof productSchema>;
 export function AdminDashboard() {
   const isAdmin = useAppStore((s) => s.isAdmin);
@@ -75,7 +75,7 @@ export function AdminDashboard() {
       const newProduct = {
         ...values,
         images: [values.imageUrl],
-        sizes: values.sizes ? values.sizes.split(',').map(s => s.trim()) : [],
+        sizes: values.sizes ? values.sizes.split(',').map(s => s.trim()).filter(Boolean) : [],
         inStock: true,
       };
       await api('/api/products', {
@@ -180,7 +180,6 @@ export function AdminDashboard() {
                             type="number"
                             placeholder="0"
                             {...field}
-                            value={field.value}
                             onChange={(e) => field.onChange(e.target.valueAsNumber)}
                           />
                         </FormControl>

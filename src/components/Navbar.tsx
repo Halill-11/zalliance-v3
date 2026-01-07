@@ -14,13 +14,13 @@ export function Navbar() {
     { name: 'À Propos', path: '/#about' },
   ];
   return (
-    <nav className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md dark:bg-slate-950/80 dark:border-slate-800">
+    <nav className="sticky top-0 z-50 w-full border-b bg-white/90 backdrop-blur-md dark:bg-slate-950/90 dark:border-slate-800 transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <Link to="/" className="flex items-center gap-2">
-              <span className="font-display text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+            <Link to="/" className="flex items-center gap-2 group">
+              <span className="font-display text-2xl font-bold tracking-tight text-slate-900 dark:text-white group-hover:text-amber-600 transition-colors">
                 ZALLIANCE
               </span>
             </Link>
@@ -31,7 +31,7 @@ export function Navbar() {
               <Link
                 key={link.name}
                 to={link.path}
-                className="text-sm font-medium text-slate-700 hover:text-amber-600 transition-colors dark:text-slate-300 dark:hover:text-amber-500"
+                className="text-sm font-medium text-slate-700 hover:text-amber-600 transition-colors dark:text-slate-300 dark:hover:text-amber-500 relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-amber-600 after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left"
               >
                 {link.name}
               </Link>

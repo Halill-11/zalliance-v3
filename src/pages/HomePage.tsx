@@ -6,6 +6,7 @@ import { api } from '@/lib/api-client';
 import { Product } from '@shared/types';
 import { Loader2, ArrowRight } from 'lucide-react';
 import { toast } from 'sonner';
+import { motion } from 'framer-motion';
 export function HomePage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -26,44 +27,81 @@ export function HomePage() {
     };
     fetchProducts();
   }, []);
+  // Animation Variants
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+  };
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans">
       <Navbar />
       {/* Hero Section */}
       <section className="relative h-[80vh] w-full overflow-hidden">
         <div className="absolute inset-0 bg-slate-900/40 z-10" />
-        <img
+        <motion.img
+          initial={{ scale: 1.1 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 10, ease: "linear" }}
           src="https://images.unsplash.com/photo-1531384441138-2736e62e0919?q=80&w=2000&auto=format&fit=crop"
           alt="African Luxury Fashion"
           className="absolute inset-0 h-full w-full object-cover object-center"
         />
         <div className="relative z-20 h-full flex flex-col items-center justify-center text-center px-4 sm:px-6 lg:px-8">
-          <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 tracking-tight drop-shadow-lg">
-            ZALLIANCE
-          </h1>
-          <p className="text-lg md:text-2xl text-slate-100 max-w-2xl mb-10 font-light drop-shadow-md">
-            L'élégance de la haute couture africaine. Découvrez l'alliance parfaite entre tradition et sophistication moderne.
-          </p>
-          <Button
-            size="lg"
-            className="bg-amber-600 hover:bg-amber-700 text-white border-none text-lg px-8 py-6 rounded-none"
-            onClick={() => document.getElementById('collections')?.scrollIntoView({ behavior: 'smooth' })}
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={staggerContainer}
+            className="max-w-4xl"
           >
-            Découvrir la Collection
-          </Button>
+            <motion.h1 
+              variants={fadeInUp}
+              className="font-display text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 tracking-tight drop-shadow-lg"
+            >
+              ZALLIANCE
+            </motion.h1>
+            <motion.p 
+              variants={fadeInUp}
+              className="text-lg md:text-2xl text-slate-100 max-w-2xl mx-auto mb-10 font-light drop-shadow-md"
+            >
+              L'élégance de la haute couture africaine. Découvrez l'alliance parfaite entre tradition et sophistication moderne.
+            </motion.p>
+            <motion.div variants={fadeInUp}>
+              <Button
+                size="lg"
+                className="bg-amber-600 hover:bg-amber-700 text-white border-none text-lg px-8 py-6 rounded-none transition-all duration-300 hover:scale-105"
+                onClick={() => document.getElementById('collections')?.scrollIntoView({ behavior: 'smooth' })}
+              >
+                Découvrir la Collection
+              </Button>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
       {/* Collections Grid */}
       <main id="collections" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
         <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
-          <div>
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
             <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-2">
               Dernières Arrivées
             </h2>
             <p className="text-slate-600 dark:text-slate-400">
               Des pièces sélectionnées pour l'homme distingué.
             </p>
-          </div>
+          </motion.div>
           <Button variant="outline" className="hidden md:flex gap-2">
             Voir Tout <ArrowRight className="h-4 w-4" />
           </Button>
@@ -84,11 +122,19 @@ export function HomePage() {
             <p className="text-slate-500">Aucun produit trouvé.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          <motion.div 
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
+            variants={staggerContainer}
+          >
             {products.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <motion.div key={product.id} variants={fadeInUp}>
+                <ProductCard product={product} />
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         )}
         <div className="mt-12 flex justify-center md:hidden">
           <Button variant="outline" className="w-full">

@@ -8,23 +8,33 @@ import { Loader2, ArrowLeft, MessageCircle, ShieldCheck, ShoppingBag } from 'luc
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { useAppStore } from '@/lib/store';
+import { ProductCard } from '@/components/ProductCard';
 export function ProductPage() {
   const { id } = useParams<{ id: string }>();
   const [product, setProduct] = useState<Product | null>(null);
+  const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const addToCart = useAppStore((s) => s.addToCart);
   useEffect(() => {
-    const fetchProduct = async () => {
+    const fetchProductAndRelated = async () => {
       if (!id) return;
       try {
         setLoading(true);
+        // Fetch main product
         const data = await api<Product>(`/api/products/${id}`);
         setProduct(data);
         if (data.sizes.length > 0) {
           setSelectedSize(data.sizes[0]);
         }
+        setActiveImageIndex(0);
+        // Fetch related products (simple implementation: fetch recent items and exclude current)
+        const relatedData = await api<{ items: Product[] }>('/api/products?limit=5');
+        const filtered = relatedData.items
+          .filter(p => p.id !== id)
+          .slice(0, 4);
+        setRelatedProducts(filtered);
       } catch (err) {
         console.error('Failed to fetch product:', err);
         toast.error('Impossible de charger les détails du produit');
@@ -32,7 +42,9 @@ export function ProductPage() {
         setLoading(false);
       }
     };
-    fetchProduct();
+    fetchProductAndRelated();
+    // Scroll to top when ID changes
+    window.scrollTo(0, 0);
   }, [id]);
   const handleAddToCart = () => {
     if (!product) return;
@@ -85,7 +97,7 @@ export function ProductPage() {
         <Link to="/" className="inline-flex items-center text-sm text-slate-500 hover:text-amber-600 mb-8 transition-colors">
           <ArrowLeft className="mr-2 h-4 w-4" /> Retour à la collection
         </Link>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 mb-24">
           {/* Image Gallery */}
           <div className="space-y-4">
             <div className="aspect-[3/4] w-full overflow-hidden rounded-sm bg-slate-100 relative group">
@@ -178,6 +190,19 @@ export function ProductPage() {
             </div>
           </div>
         </div>
+        {/* Related Products Section */}
+        {relatedProducts.length > 0 && (
+          <div className="border-t border-slate-200 dark:border-slate-800 pt-16">
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-8">
+              Vous aimerez aussi
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {relatedProducts.map((related) => (
+                <ProductCard key={related.id} product={related} />
+              ))}
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );
