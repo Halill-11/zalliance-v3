@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
@@ -7,22 +7,56 @@ import { useAppStore } from '@/lib/store';
 import { CartSheet } from '@/components/CartSheet';
 export function Navbar() {
   const location = useLocation();
+  const navigate = useNavigate();
   const isAdmin = useAppStore((s) => s.isAdmin);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navLinks = [
     { name: 'Accueil', path: '/' },
     { name: 'Collections', path: '/#collections' },
     { name: 'À Propos', path: '/#about' },
   ];
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, path: string) => {
+    e.preventDefault();
+    setIsMobileMenuOpen(false);
+    const isHome = location.pathname === '/';
+    if (path === '/') {
+      if (isHome) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        navigate('/');
+      }
+    } else if (path.startsWith('/#')) {
+      const targetId = path.substring(2); // remove '/#'
+      if (isHome) {
+        const element = document.getElementById(targetId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        } else {
+          // Fallback: if element isn't found immediately, try navigating to hash
+          // This might happen if content loads dynamically, though in our case it's static
+          window.location.hash = targetId;
+        }
+      } else {
+        navigate(path);
+      }
+    } else {
+      navigate(path);
+    }
+  };
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-white/90 backdrop-blur-md dark:bg-slate-950/90 dark:border-slate-800 transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <Link to="/" className="flex items-center gap-2 group">
-              {/* 
+            <a 
+              href="/" 
+              onClick={(e) => handleNavClick(e, '/')}
+              className="flex items-center gap-2 group"
+            >
+              {/*
                   LOGO CONFIGURATION:
-                  Currently using a placeholder image. 
+                  Currently using a placeholder image.
                   Replace the src below with the actual URL of the uploaded logo image.
               */}
               <img
@@ -30,18 +64,19 @@ export function Navbar() {
                 alt="ZALLIANCE"
                 className="h-10 md:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
               />
-            </Link>
+            </a>
           </div>
           {/* Desktop Navigation */}
           <div className="hidden md:flex md:items-center md:space-x-8">
             {navLinks.map((link) => (
-              <Link
+              <a
                 key={link.name}
-                to={link.path}
-                className="text-sm font-medium text-slate-700 hover:text-amber-600 transition-colors dark:text-slate-300 dark:hover:text-amber-500 relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-amber-600 after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left"
+                href={link.path}
+                onClick={(e) => handleNavClick(e, link.path)}
+                className="text-sm font-medium text-slate-700 hover:text-amber-600 transition-colors dark:text-slate-300 dark:hover:text-amber-500 relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-amber-600 after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left cursor-pointer"
               >
                 {link.name}
-              </Link>
+              </a>
             ))}
             {isAdmin && (
               <Link
@@ -58,7 +93,7 @@ export function Navbar() {
             <CartSheet />
             {/* Mobile Menu */}
             <div className="md:hidden">
-              <Sheet>
+              <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
                 <SheetTrigger asChild>
                   <Button variant="ghost" size="icon">
                     <Menu className="h-6 w-6 text-slate-700 dark:text-slate-300" />
@@ -73,17 +108,19 @@ export function Navbar() {
                   </SheetHeader>
                   <div className="flex flex-col gap-6 mt-8">
                     {navLinks.map((link) => (
-                      <Link
+                      <a
                         key={link.name}
-                        to={link.path}
-                        className="text-lg font-medium text-slate-900 hover:text-amber-600 dark:text-slate-100"
+                        href={link.path}
+                        onClick={(e) => handleNavClick(e, link.path)}
+                        className="text-lg font-medium text-slate-900 hover:text-amber-600 dark:text-slate-100 cursor-pointer"
                       >
                         {link.name}
-                      </Link>
+                      </a>
                     ))}
                     {isAdmin && (
                       <Link
                         to="/admin"
+                        onClick={() => setIsMobileMenuOpen(false)}
                         className="text-lg font-medium text-amber-600"
                       >
                         Admin

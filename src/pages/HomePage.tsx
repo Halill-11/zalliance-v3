@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Navbar } from '@/components/Navbar';
 import { ProductCard } from '@/components/ProductCard';
 import { Button } from '@/components/ui/button';
 import { api } from '@/lib/api-client';
 import { Product } from '@shared/types';
-import { Loader2, ArrowRight } from 'lucide-react';
+import { Loader2, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 export function HomePage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const location = useLocation();
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -27,6 +29,19 @@ export function HomePage() {
     };
     fetchProducts();
   }, []);
+  // Handle hash scrolling on mount or location change
+  useEffect(() => {
+    if (location.hash) {
+      const id = location.hash.replace('#', '');
+      const element = document.getElementById(id);
+      if (element) {
+        // Small delay to ensure layout is stable
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      }
+    }
+  }, [location]);
   // Animation Variants
   const fadeInUp = {
     hidden: { opacity: 0, y: 30 },
@@ -62,13 +77,13 @@ export function HomePage() {
             variants={staggerContainer}
             className="max-w-4xl"
           >
-            <motion.h1 
+            <motion.h1
               variants={fadeInUp}
               className="font-display text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 tracking-tight drop-shadow-lg"
             >
               ZALLIANCE
             </motion.h1>
-            <motion.p 
+            <motion.p
               variants={fadeInUp}
               className="text-lg md:text-2xl text-slate-100 max-w-2xl mx-auto mb-10 font-light drop-shadow-md"
             >
@@ -122,7 +137,7 @@ export function HomePage() {
             <p className="text-slate-500">Aucun produit trouvé.</p>
           </div>
         ) : (
-          <motion.div 
+          <motion.div
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
             initial="hidden"
             whileInView="visible"
@@ -142,6 +157,72 @@ export function HomePage() {
           </Button>
         </div>
       </main>
+      {/* About Section */}
+      <section id="about" className="py-16 md:py-24 bg-slate-100 dark:bg-slate-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="relative"
+            >
+              <div className="aspect-[4/5] w-full rounded-sm overflow-hidden shadow-2xl">
+                <img 
+                  src="https://images.unsplash.com/photo-1507120410856-1f35574c3b45?q=80&w=1000&auto=format&fit=crop" 
+                  alt="ZALLIANCE Atelier" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="absolute -bottom-6 -right-6 w-48 h-48 bg-amber-600 rounded-sm -z-10 hidden md:block" />
+              <div className="absolute -top-6 -left-6 w-48 h-48 border-2 border-slate-300 dark:border-slate-700 rounded-sm -z-10 hidden md:block" />
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-6">
+                L'Art de l'Élégance Africaine
+              </h2>
+              <p className="text-lg text-slate-600 dark:text-slate-300 mb-6 leading-relaxed">
+                Chez ZALLIANCE, nous croyons que le vêtement est plus qu'une simple parure ; c'est une expression d'identité, d'héritage et d'ambition.
+              </p>
+              <p className="text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">
+                Fondée avec la vision de redéfinir le luxe africain, notre maison combine des techniques de couture traditionnelles avec des coupes contemporaines. Chaque pièce est méticuleusement conçue pour l'homme moderne qui valorise l'authenticité sans compromettre le style.
+              </p>
+              <div className="space-y-4 mb-8">
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="h-6 w-6 text-amber-600 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <h4 className="font-bold text-slate-900 dark:text-white">Matériaux Premium</h4>
+                    <p className="text-sm text-slate-500">Tissus importés de haute qualité et textiles africains authentiques.</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="h-6 w-6 text-amber-600 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <h4 className="font-bold text-slate-900 dark:text-white">Artisanat d'Excellence</h4>
+                    <p className="text-sm text-slate-500">Chaque couture est réalisée avec précision par nos maîtres tailleurs.</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="h-6 w-6 text-amber-600 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <h4 className="font-bold text-slate-900 dark:text-white">Service Personnalisé</h4>
+                    <p className="text-sm text-slate-500">Une expérience d'achat sur mesure, de la sélection à la livraison.</p>
+                  </div>
+                </div>
+              </div>
+              <Button className="bg-slate-900 hover:bg-slate-800 text-white px-8 py-6 text-lg">
+                Notre Histoire
+              </Button>
+            </motion.div>
+          </div>
+        </div>
+      </section>
       {/* Footer */}
       <footer className="bg-slate-900 text-white py-12 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -173,7 +254,7 @@ export function HomePage() {
           </div>
           <div className="border-t border-slate-800 mt-12 pt-8 text-center text-xs text-slate-500">
             <p>&copy; {new Date().getFullYear()} ZALLIANCE. Tous droits réservés.</p>
-            <p className="mt-2">Built with ❤️ by Aurelia | Your AI Co-founder</p>
+            <p className="mt-2">Built with ❤��� by Aurelia | Your AI Co-founder</p>
           </div>
         </div>
       </footer>
