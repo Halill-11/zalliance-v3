@@ -58,16 +58,16 @@ export function ProductPage() {
   const handleWhatsAppOrder = () => {
     if (!product) return;
     const phoneNumber = "221770000000"; // Replace with real number
-    const productUrl = window.location.href;
+    // Use the share proxy URL for the link preview
+    // We use window.location.origin to ensure it points to the current deployment
+    const shareUrl = `${window.location.origin}/api/share/product/${product.id}?img=${activeImageIndex}`;
     const sizeText = selectedSize ? ` (Taille: ${selectedSize})` : '';
-    // Get current image URL for the message
-    const currentImage = product.images?.[activeImageIndex] || product.images?.[0] || '';
-    // Enhanced message with explicit photo URL
+    const price = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF' }).format(product.price);
+    // Message construction
     const message = `Bonjour ZALLIANCE, je souhaite commander ce produit :
 Nom: ${product.name}${sizeText}
-Prix: ${new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF' }).format(product.price)}
-Lien: ${productUrl}
-Photo: ${currentImage}`;
+Prix: ${price}
+Lien: ${shareUrl}`;
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
     window.open(whatsappUrl, '_blank');
