@@ -1,3 +1,11 @@
+// Suppress specific Vite WebSocket errors in development that cause noise in the error reporter
+const originalError = console.error;
+console.error = (...args: any[]) => {
+  if (typeof args[0] === 'string' && args[0].includes('[vite] failed to connect to websocket')) {
+    return;
+  }
+  originalError.apply(console, args);
+};
 import '@/lib/errorReporter';
 import { enableMapSet } from "immer";
 enableMapSet();

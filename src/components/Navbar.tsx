@@ -20,9 +20,15 @@ export function Navbar() {
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link to="/" className="flex items-center gap-2 group">
-              <span className="font-display text-2xl font-bold tracking-tight text-slate-900 dark:text-white group-hover:text-amber-600 transition-colors">
-                ZALLIANCE
-              </span>
+              {/* 
+                  TODO: Replace the src below with your actual logo file path (e.g., "/logo.png") 
+                  after placing the file in the public directory.
+              */}
+              <img 
+                src="https://placehold.co/150x40/ffffff/0F172A?text=ZALLIANCE" 
+                alt="ZALLIANCE" 
+                className="h-10 w-auto object-contain"
+              />
             </Link>
           </div>
           {/* Desktop Navigation */}
