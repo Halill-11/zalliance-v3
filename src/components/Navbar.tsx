@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { useAppStore } from '@/lib/store';
 import { CartSheet } from '@/components/CartSheet';
 export function Navbar() {
@@ -58,6 +58,12 @@ export function Navbar() {
                   </Button>
                 </SheetTrigger>
                 <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+                  <SheetHeader>
+                    <SheetTitle className="text-left font-display text-xl font-bold">Menu</SheetTitle>
+                    <SheetDescription className="text-left">
+                      Navigation principale
+                    </SheetDescription>
+                  </SheetHeader>
                   <div className="flex flex-col gap-6 mt-8">
                     {navLinks.map((link) => (
                       <Link

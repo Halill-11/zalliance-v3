@@ -1,7 +1,7 @@
 import React from 'react';
 import { ShoppingBag, Trash2, Plus, Minus, MessageCircle, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetFooter } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetFooter, SheetDescription } from '@/components/ui/sheet';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { useAppStore } from '@/lib/store';
@@ -18,10 +18,20 @@ export function CartSheet() {
     let message = "Bonjour ZALLIANCE, je souhaite commander ces produits :\n\n";
     cart.forEach(item => {
       const price = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF' }).format(item.price);
+      const productUrl = `${window.location.origin}/product/${item.id}`;
+      const imageUrl = item.images?.[0] || '';
+      // Check if image is a data URL (base64) to avoid creating a massive link that breaks WhatsApp
+      const isDataUrl = imageUrl.startsWith('data:');
+      const displayImageUrl = isDataUrl ? '[Voir lien produit]' : imageUrl;
       message += `- ${item.name} (Taille: ${item.selectedSize}) x${item.quantity} - ${price}\n`;
+      message += `  Lien: ${productUrl}\n`;
+      if (displayImageUrl && !isDataUrl) {
+        message += `  Photo: ${displayImageUrl}\n`;
+      }
+      message += `\n`;
     });
     const formattedTotal = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF' }).format(total);
-    message += `\nTotal: ${formattedTotal}`;
+    message += `Total: ${formattedTotal}`;
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
     window.open(whatsappUrl, '_blank');
@@ -44,6 +54,9 @@ export function CartSheet() {
             <ShoppingBag className="h-5 w-5" />
             Mon Panier ({itemCount})
           </SheetTitle>
+          <SheetDescription>
+            Vérifiez vos articles ci-dessous avant de finaliser votre commande sur WhatsApp.
+          </SheetDescription>
           <Separator />
         </SheetHeader>
         <div className="flex-1 overflow-hidden relative mt-4">
@@ -123,7 +136,7 @@ export function CartSheet() {
                   {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF' }).format(total)}
                 </span>
               </div>
-              <Button 
+              <Button
                 className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white font-bold py-6 text-lg gap-2 shadow-md hover:shadow-lg transition-all"
                 onClick={handleWhatsAppOrder}
               >
