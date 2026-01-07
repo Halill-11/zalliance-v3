@@ -18,7 +18,7 @@ import { toast } from 'sonner';
 const productSchema = z.object({
   name: z.string().min(2, 'Le nom est requis'),
   description: z.string().min(10, 'La description est requise'),
-  price: z.coerce.number().min(1, 'Le prix doit être positif'),
+  price: z.number().min(1, 'Le prix doit être positif'),
   category: z.string().min(2, 'La catégorie est requise'),
   imageUrl: z.string().url('Doit être une URL valide'),
   sizes: z.string().optional(), // Comma separated
