@@ -11,21 +11,31 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { RouteErrorBoundary } from '@/components/RouteErrorBoundary';
 import '@/index.css'
 import { HomePage } from '@/pages/HomePage'
-
+import { ProductPage } from '@/pages/ProductPage'
+import { AdminDashboard } from '@/pages/AdminDashboard'
+import { Toaster } from '@/components/ui/sonner'
 const router = createBrowserRouter([
   {
     path: "/",
     element: <HomePage />,
     errorElement: <RouteErrorBoundary />,
   },
+  {
+    path: "/product/:id",
+    element: <ProductPage />,
+    errorElement: <RouteErrorBoundary />,
+  },
+  {
+    path: "/admin",
+    element: <AdminDashboard />,
+    errorElement: <RouteErrorBoundary />,
+  },
 ]);
-
-// Do not touch this code
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ErrorBoundary>
       <RouterProvider router={router} />
+      <Toaster richColors closeButton />
     </ErrorBoundary>
   </StrictMode>,
 )
-   
