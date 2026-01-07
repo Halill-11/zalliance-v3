@@ -6,7 +6,7 @@ import { Navbar } from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from '@/components/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 import { api } from '@/lib/api-client';
@@ -16,13 +16,12 @@ import { Loader2, Trash2, Plus, Lock, Pencil } from 'lucide-react';
 import { toast } from 'sonner';
 import { ImageUpload } from '@/components/ImageUpload';
 // Schema for adding/editing a product
-// Removed .url() validation to allow Base64 strings
 const productSchema = z.object({
   name: z.string().min(2, 'Le nom est requis'),
   description: z.string().min(10, 'La description est requise'),
-  price: z.number().min(1, 'Le prix doit être positif'),
+  price: z.number().min(1, 'Le prix doit ��tre positif'),
   category: z.string().min(2, 'La catégorie est requise'),
-  imageUrl: z.string().min(1, 'Une image est requise'),
+  images: z.array(z.string()).min(1, 'Au moins une image est requise'),
   sizes: z.string().optional(), // Comma separated
 });
 // Explicitly define the interface to match the schema
@@ -32,7 +31,7 @@ const defaultValues: ProductFormValues = {
   description: '',
   price: 0,
   category: '',
-  imageUrl: '',
+  images: [],
   sizes: 'S, M, L, XL',
 };
 export function AdminDashboard() {
@@ -81,7 +80,7 @@ export function AdminDashboard() {
       description: product.description,
       price: product.price,
       category: product.category,
-      imageUrl: product.images[0] || '',
+      images: product.images || [],
       sizes: product.sizes.join(', '),
     });
     setIsDialogOpen(true);
@@ -90,7 +89,7 @@ export function AdminDashboard() {
     try {
       const productData = {
         ...values,
-        images: [values.imageUrl],
+        images: values.images,
         sizes: values.sizes ? values.sizes.split(',').map(s => s.trim()).filter(Boolean) : [],
         inStock: true,
       };
@@ -100,7 +99,7 @@ export function AdminDashboard() {
           method: 'PUT',
           body: JSON.stringify(productData),
         });
-        toast.success('Produit modifié avec succ��s');
+        toast.success('Produit modifié avec succès');
       } else {
         // Create new product
         await api<Product>('/api/products', {
@@ -158,8 +157,8 @@ export function AdminDashboard() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-slate-900">Gestion des Produits</h1>
-          <Dialog 
-            open={isDialogOpen} 
+          <Dialog
+            open={isDialogOpen}
             onOpenChange={(open) => {
               setIsDialogOpen(open);
               if (!open) {
@@ -176,19 +175,22 @@ export function AdminDashboard() {
             <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>{editingProduct ? 'Modifier le Produit' : 'Ajouter un Nouveau Produit'}</DialogTitle>
+                <DialogDescription>
+                  Remplissez les informations ci-dessous pour {editingProduct ? 'modifier' : 'cr��er'} un produit.
+                </DialogDescription>
               </DialogHeader>
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                   <FormField
                     control={form.control}
-                    name="imageUrl"
+                    name="images"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Image du Produit</FormLabel>
+                        <FormLabel>Images du Produit</FormLabel>
                         <FormControl>
-                          <ImageUpload 
-                            value={field.value} 
-                            onChange={field.onChange} 
+                          <ImageUpload
+                            value={field.value}
+                            onChange={field.onChange}
                           />
                         </FormControl>
                         <FormMessage />
@@ -308,18 +310,18 @@ export function AdminDashboard() {
                     <TableCell>{new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF' }).format(product.price)}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
+                        <Button
+                          variant="ghost"
+                          size="icon"
                           onClick={() => handleEdit(product)}
                           className="text-blue-600 hover:text-blue-800 hover:bg-blue-50"
                         >
                           <Pencil className="h-4 w-4" />
                         </Button>
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
-                          onClick={() => handleDelete(product.id)} 
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleDelete(product.id)}
                           className="text-red-500 hover:text-red-700 hover:bg-red-50"
                         >
                           <Trash2 className="h-4 w-4" />
