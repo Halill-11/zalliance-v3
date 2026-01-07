@@ -78,7 +78,8 @@ export function AdminDashboard() {
         sizes: values.sizes ? values.sizes.split(',').map(s => s.trim()).filter(Boolean) : [],
         inStock: true,
       };
-      await api('/api/products', {
+      // Explicitly typed API call
+      await api<Product>('/api/products', {
         method: 'POST',
         body: JSON.stringify(newProduct),
       });
@@ -93,7 +94,8 @@ export function AdminDashboard() {
   const handleDelete = async (id: string) => {
     if (!confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) return;
     try {
-      await api(`/api/products/${id}`, { method: 'DELETE' });
+      // Explicitly typed API call
+      await api<{ id: string; deleted: boolean }>(`/api/products/${id}`, { method: 'DELETE' });
       toast.success('Produit supprimé');
       setProducts(products.filter(p => p.id !== id));
     } catch (err) {

@@ -60,7 +60,14 @@ export function ProductPage() {
     const phoneNumber = "221770000000"; // Replace with real number
     const productUrl = window.location.href;
     const sizeText = selectedSize ? ` (Taille: ${selectedSize})` : '';
-    const message = `Bonjour ZALLIANCE, je souhaite commander ce produit : ${product.name}${sizeText}. Voici le lien : ${productUrl}`;
+    // Get current image URL for the message
+    const currentImage = product.images?.[activeImageIndex] || product.images?.[0] || '';
+    // Enhanced message with explicit photo URL
+    const message = `Bonjour ZALLIANCE, je souhaite commander ce produit :
+Nom: ${product.name}${sizeText}
+Prix: ${new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF' }).format(product.price)}
+Lien: ${productUrl}
+Photo: ${currentImage}`;
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
     window.open(whatsappUrl, '_blank');
@@ -180,7 +187,7 @@ export function ProductPage() {
                   disabled={!product.inStock}
                 >
                   <MessageCircle className="h-6 w-6" />
-                  Commander
+                  Commander sur WhatsApp
                 </Button>
               </div>
               <div className="flex items-center justify-center gap-2 text-sm text-slate-500 mt-4">
