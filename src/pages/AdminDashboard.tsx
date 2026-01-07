@@ -32,7 +32,9 @@ export function AdminDashboard() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   // Mock Login State
   const [password, setPassword] = useState('');
-  const form = useForm<ProductFormValues>({
+  // Removed explicit generic <ProductFormValues> to let RHF infer types from resolver
+  // This fixes the mismatch between z.coerce.number() (output) and input state (string)
+  const form = useForm({
     resolver: zodResolver(productSchema),
     defaultValues: {
       name: '',
@@ -58,6 +60,7 @@ export function AdminDashboard() {
     if (isAdmin) {
       fetchProducts();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAdmin]);
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -245,7 +248,11 @@ export function AdminDashboard() {
                 {products.map((product) => (
                   <TableRow key={product.id}>
                     <TableCell>
-                      <img src={product.images[0]} alt={product.name} className="h-12 w-12 object-cover rounded" />
+                      <img
+                        src={product.images?.[0] || 'https://placehold.co/100x100?text=No+Img'}
+                        alt={product.name}
+                        className="h-12 w-12 object-cover rounded"
+                      />
                     </TableCell>
                     <TableCell className="font-medium">{product.name}</TableCell>
                     <TableCell>{product.category}</TableCell>

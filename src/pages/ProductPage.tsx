@@ -65,6 +65,8 @@ export function ProductPage() {
       </div>
     );
   }
+  // Fallback for main image
+  const mainImage = product.images?.[activeImageIndex] || 'https://placehold.co/600x800?text=No+Image';
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950 font-sans">
       <Navbar />
@@ -77,12 +79,12 @@ export function ProductPage() {
           <div className="space-y-4">
             <div className="aspect-[3/4] w-full overflow-hidden rounded-sm bg-slate-100 relative group">
               <img
-                src={product.images[activeImageIndex]}
+                src={mainImage}
                 alt={product.name}
                 className="h-full w-full object-cover object-center transition-transform duration-500"
               />
             </div>
-            {product.images.length > 1 && (
+            {product.images && product.images.length > 1 && (
               <div className="grid grid-cols-4 gap-4">
                 {product.images.map((img, idx) => (
                   <button

@@ -7,12 +7,14 @@ interface ProductCardProps {
   product: Product;
 }
 export function ProductCard({ product }: ProductCardProps) {
+  // Fallback image if product has no images
+  const mainImage = product.images?.[0] || 'https://placehold.co/400x600?text=No+Image';
   return (
     <Link to={`/product/${product.id}`} className="group block h-full">
       <Card className="h-full overflow-hidden border-none shadow-sm hover:shadow-lg transition-all duration-300 bg-white dark:bg-slate-900">
         <div className="aspect-[3/4] w-full overflow-hidden bg-slate-100 relative">
           <img
-            src={product.images[0]}
+            src={mainImage}
             alt={product.name}
             className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
             loading="lazy"
