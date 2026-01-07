@@ -79,7 +79,8 @@ function updateWranglerJsonc() {
 function runSetupCommands() {
     const commands = [
     "bun add @tanstack/react-table@^8.15.0",
-    "bun add react-dropzone@^14.2.0"
+    "bun add react-dropzone@^14.2.0",
+    "bun add react-dropzone"
 ];
     
     if (commands.length === 0) {
