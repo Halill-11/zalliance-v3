@@ -20,45 +20,16 @@ export function Navbar() {
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link to="/" className="flex items-center gap-2 group">
-              {/*
+              {/* 
                   LOGO CONFIGURATION:
-                  Currently using an inline SVG for immediate visibility and performance.
-                  To use a custom image file (PNG/JPG/SVG):
-                  1. Comment out or remove the <svg> block below.
-                  2. Uncomment the <img> tag below and update the 'src' attribute.
-                  <img
-                    src="/path/to/your/logo.png"
-                    alt="ZALLIANCE"
-                    className="h-10 w-auto object-contain"
-                  />
+                  Currently using a placeholder image. 
+                  Replace the src below with the actual URL of the uploaded logo image.
               */}
-              <svg
-                viewBox="0 0 190 40"
-                className="h-8 md:h-10 w-auto transition-transform duration-300 group-hover:scale-105"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-label="ZALLIANCE Logo"
-              >
-                <text
-                  x="2"
-                  y="28"
-                  className="fill-slate-900 dark:fill-white"
-                  style={{
-                    fontFamily: 'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif',
-                    fontWeight: 'bold',
-                    letterSpacing: '0.05em',
-                    fontSize: '26px'
-                  }}
-                >
-                  ZALLIANCE
-                </text>
-                <rect
-                  x="2"
-                  y="34"
-                  width="155"
-                  height="2"
-                  className="fill-amber-600"
-                />
-              </svg>
+              <img
+                src="https://placehold.co/180x60/transparent/0F172A?text=ZALLIANCE"
+                alt="ZALLIANCE"
+                className="h-10 md:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+              />
             </Link>
           </div>
           {/* Desktop Navigation */}
