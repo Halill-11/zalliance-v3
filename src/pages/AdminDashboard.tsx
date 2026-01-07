@@ -23,6 +23,7 @@ const productSchema = z.object({
   imageUrl: z.string().url('Doit être une URL valide'),
   sizes: z.string().optional(), // Comma separated
 });
+// Explicitly infer the type to ensure compatibility with useForm
 type ProductFormValues = z.infer<typeof productSchema>;
 export function AdminDashboard() {
   const isAdmin = useAppStore((s) => s.isAdmin);
@@ -175,12 +176,11 @@ export function AdminDashboard() {
                       <FormItem>
                         <FormLabel>Prix (XOF)</FormLabel>
                         <FormControl>
-                          {/* Fix TS2322: Explicitly handle value and onChange for number input */}
-                          <Input 
-                            type="number" 
+                          <Input
+                            type="number"
                             placeholder="0"
                             {...field}
-                            value={field.value ?? ''}
+                            value={field.value}
                             onChange={(e) => field.onChange(e.target.valueAsNumber)}
                           />
                         </FormControl>

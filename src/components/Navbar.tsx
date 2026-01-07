@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ShoppingBag, Menu, X, ShieldCheck } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useAppStore } from '@/lib/store';
+import { CartSheet } from '@/components/CartSheet';
 export function Navbar() {
   const location = useLocation();
   const isAdmin = useAppStore((s) => s.isAdmin);
-  const cartCount = useAppStore((s) => s.cartCount);
   const navLinks = [
     { name: 'Accueil', path: '/' },
     { name: 'Collections', path: '/#collections' },
@@ -46,15 +46,9 @@ export function Navbar() {
             )}
           </div>
           {/* Actions */}
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" className="relative" aria-label="Panier">
-              <ShoppingBag className="h-5 w-5 text-slate-700 dark:text-slate-300" />
-              {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-amber-600 text-[10px] font-bold text-white">
-                  {cartCount}
-                </span>
-              )}
-            </Button>
+          <div className="flex items-center gap-2 md:gap-4">
+            {/* Cart Sheet Integration */}
+            <CartSheet />
             {/* Mobile Menu */}
             <div className="md:hidden">
               <Sheet>

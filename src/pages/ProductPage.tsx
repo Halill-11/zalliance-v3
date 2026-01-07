@@ -4,15 +4,17 @@ import { Navbar } from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
 import { api } from '@/lib/api-client';
 import { Product } from '@shared/types';
-import { Loader2, ArrowLeft, MessageCircle, ShieldCheck } from 'lucide-react';
+import { Loader2, ArrowLeft, MessageCircle, ShieldCheck, ShoppingBag } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { useAppStore } from '@/lib/store';
 export function ProductPage() {
   const { id } = useParams<{ id: string }>();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const addToCart = useAppStore((s) => s.addToCart);
   useEffect(() => {
     const fetchProduct = async () => {
       if (!id) return;
@@ -32,6 +34,15 @@ export function ProductPage() {
     };
     fetchProduct();
   }, [id]);
+  const handleAddToCart = () => {
+    if (!product) return;
+    if (!selectedSize && product.sizes.length > 0) {
+      toast.error('Veuillez sélectionner une taille');
+      return;
+    }
+    addToCart(product, selectedSize || 'Unique');
+    toast.success('Produit ajouté au panier');
+  };
   const handleWhatsAppOrder = () => {
     if (!product) return;
     const phoneNumber = "221770000000"; // Replace with real number
@@ -59,7 +70,7 @@ export function ProductPage() {
         <div className="flex-1 flex flex-col justify-center items-center p-4">
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Produit introuvable</h2>
           <Link to="/">
-            <Button>Retour �� l'accueil</Button>
+            <Button>Retour à l'accueil</Button>
           </Link>
         </div>
       </div>
@@ -139,15 +150,27 @@ export function ProductPage() {
             )}
             {/* Actions */}
             <div className="mt-auto space-y-4">
-              <Button
-                size="lg"
-                className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white font-bold py-6 text-lg gap-2 shadow-lg hover:shadow-xl transition-all"
-                onClick={handleWhatsAppOrder}
-                disabled={!product.inStock}
-              >
-                <MessageCircle className="h-6 w-6" />
-                {product.inStock ? 'Commander sur WhatsApp' : 'Rupture de stock'}
-              </Button>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="w-full font-bold py-6 text-lg gap-2 border-slate-300 hover:border-amber-600 hover:text-amber-600"
+                  onClick={handleAddToCart}
+                  disabled={!product.inStock}
+                >
+                  <ShoppingBag className="h-5 w-5" />
+                  Ajouter au panier
+                </Button>
+                <Button
+                  size="lg"
+                  className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white font-bold py-6 text-lg gap-2 shadow-lg hover:shadow-xl transition-all"
+                  onClick={handleWhatsAppOrder}
+                  disabled={!product.inStock}
+                >
+                  <MessageCircle className="h-6 w-6" />
+                  Commander
+                </Button>
+              </div>
               <div className="flex items-center justify-center gap-2 text-sm text-slate-500 mt-4">
                 <ShieldCheck className="h-4 w-4" />
                 <span>Paiement sécurisé via WhatsApp • Qualité Authentique Garantie</span>
