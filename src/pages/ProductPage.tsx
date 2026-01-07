@@ -4,7 +4,7 @@ import { Navbar } from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
 import { api } from '@/lib/api-client';
 import { Product } from '@shared/types';
-import { Loader2, ArrowLeft, MessageCircle, Check, ShieldCheck } from 'lucide-react';
+import { Loader2, ArrowLeft, MessageCircle, ShieldCheck } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 export function ProductPage() {
@@ -25,7 +25,7 @@ export function ProductPage() {
         }
       } catch (err) {
         console.error('Failed to fetch product:', err);
-        toast.error('Could not load product details');
+        toast.error('Impossible de charger les détails du produit');
       } finally {
         setLoading(false);
       }
@@ -57,9 +57,9 @@ export function ProductPage() {
       <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col">
         <Navbar />
         <div className="flex-1 flex flex-col justify-center items-center p-4">
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Product Not Found</h2>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Produit introuvable</h2>
           <Link to="/">
-            <Button>Return to Home</Button>
+            <Button>Retour �� l'accueil</Button>
           </Link>
         </div>
       </div>
@@ -72,7 +72,7 @@ export function ProductPage() {
       <Navbar />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         <Link to="/" className="inline-flex items-center text-sm text-slate-500 hover:text-amber-600 mb-8 transition-colors">
-          <ArrowLeft className="mr-2 h-4 w-4" /> Back to Collection
+          <ArrowLeft className="mr-2 h-4 w-4" /> Retour à la collection
         </Link>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
           {/* Image Gallery */}
@@ -118,7 +118,7 @@ export function ProductPage() {
             {/* Size Selector */}
             {product.sizes.length > 0 && (
               <div className="mb-8">
-                <h3 className="text-sm font-medium text-slate-900 dark:text-white mb-4">Select Size</h3>
+                <h3 className="text-sm font-medium text-slate-900 dark:text-white mb-4">Choisir la taille</h3>
                 <div className="flex flex-wrap gap-3">
                   {product.sizes.map((size) => (
                     <button
@@ -146,11 +146,11 @@ export function ProductPage() {
                 disabled={!product.inStock}
               >
                 <MessageCircle className="h-6 w-6" />
-                {product.inStock ? 'Commander sur WhatsApp' : 'Out of Stock'}
+                {product.inStock ? 'Commander sur WhatsApp' : 'Rupture de stock'}
               </Button>
               <div className="flex items-center justify-center gap-2 text-sm text-slate-500 mt-4">
                 <ShieldCheck className="h-4 w-4" />
-                <span>Secure checkout via WhatsApp • Authentic Quality Guaranteed</span>
+                <span>Paiement sécurisé via WhatsApp • Qualité Authentique Garantie</span>
               </div>
             </div>
           </div>

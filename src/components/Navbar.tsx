@@ -9,9 +9,9 @@ export function Navbar() {
   const isAdmin = useAppStore((s) => s.isAdmin);
   const cartCount = useAppStore((s) => s.cartCount);
   const navLinks = [
-    { name: 'Home', path: '/' },
+    { name: 'Accueil', path: '/' },
     { name: 'Collections', path: '/#collections' },
-    { name: 'About', path: '/#about' },
+    { name: 'À Propos', path: '/#about' },
   ];
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md dark:bg-slate-950/80 dark:border-slate-800">
@@ -41,13 +41,13 @@ export function Navbar() {
                 to="/admin"
                 className="text-sm font-medium text-amber-600 hover:text-amber-700 transition-colors"
               >
-                Dashboard
+                Admin
               </Link>
             )}
           </div>
           {/* Actions */}
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" className="relative" aria-label="Cart">
+            <Button variant="ghost" size="icon" className="relative" aria-label="Panier">
               <ShoppingBag className="h-5 w-5 text-slate-700 dark:text-slate-300" />
               {cartCount > 0 && (
                 <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-amber-600 text-[10px] font-bold text-white">
@@ -79,7 +79,7 @@ export function Navbar() {
                         to="/admin"
                         className="text-lg font-medium text-amber-600"
                       >
-                        Dashboard
+                        Admin
                       </Link>
                     )}
                   </div>

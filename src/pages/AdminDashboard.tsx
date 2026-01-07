@@ -16,11 +16,11 @@ import { Loader2, Trash2, Plus, Lock } from 'lucide-react';
 import { toast } from 'sonner';
 // Schema for adding a product
 const productSchema = z.object({
-  name: z.string().min(2, 'Name is required'),
-  description: z.string().min(10, 'Description is required'),
-  price: z.coerce.number().min(1, 'Price must be positive'),
-  category: z.string().min(2, 'Category is required'),
-  imageUrl: z.string().url('Must be a valid URL'),
+  name: z.string().min(2, 'Le nom est requis'),
+  description: z.string().min(10, 'La description est requise'),
+  price: z.coerce.number().min(1, 'Le prix doit être positif'),
+  category: z.string().min(2, 'La catégorie est requise'),
+  imageUrl: z.string().url('Doit être une URL valide'),
   sizes: z.string().optional(), // Comma separated
 });
 type ProductFormValues = z.infer<typeof productSchema>;
@@ -32,9 +32,7 @@ export function AdminDashboard() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   // Mock Login State
   const [password, setPassword] = useState('');
-  // Removed explicit generic <ProductFormValues> to let RHF infer types from resolver
-  // This fixes the mismatch between z.coerce.number() (output) and input state (string)
-  const form = useForm({
+  const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
     defaultValues: {
       name: '',
@@ -51,7 +49,7 @@ export function AdminDashboard() {
       const response = await api<{ items: Product[]; next: string | null }>('/api/products?limit=100');
       setProducts(response.items);
     } catch (err) {
-      toast.error('Failed to load products');
+      toast.error('Impossible de charger les produits');
     } finally {
       setLoading(false);
     }
@@ -66,9 +64,9 @@ export function AdminDashboard() {
     e.preventDefault();
     if (password === 'admin123') { // Mock password
       login();
-      toast.success('Welcome back, Admin');
+      toast.success('Bienvenue, Admin');
     } else {
-      toast.error('Invalid password');
+      toast.error('Mot de passe invalide');
     }
   };
   const onSubmit = async (values: ProductFormValues) => {
@@ -83,22 +81,22 @@ export function AdminDashboard() {
         method: 'POST',
         body: JSON.stringify(newProduct),
       });
-      toast.success('Product added successfully');
+      toast.success('Produit ajouté avec succès');
       setIsDialogOpen(false);
       form.reset();
       fetchProducts();
     } catch (err) {
-      toast.error('Failed to add product');
+      toast.error('Erreur lors de l\'ajout du produit');
     }
   };
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this product?')) return;
+    if (!confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) return;
     try {
       await api(`/api/products/${id}`, { method: 'DELETE' });
-      toast.success('Product deleted');
+      toast.success('Produit supprimé');
       setProducts(products.filter(p => p.id !== id));
     } catch (err) {
-      toast.error('Failed to delete product');
+      toast.error('Erreur lors de la suppression');
     }
   };
   if (!isAdmin) {
@@ -110,16 +108,16 @@ export function AdminDashboard() {
               <Lock className="h-6 w-6 text-white" />
             </div>
           </div>
-          <h2 className="text-2xl font-bold text-center mb-6 text-slate-900">Admin Access</h2>
+          <h2 className="text-2xl font-bold text-center mb-6 text-slate-900">Accès Admin</h2>
           <form onSubmit={handleLogin} className="space-y-4">
             <Input
               type="password"
-              placeholder="Enter password (admin123)"
+              placeholder="Entrez le mot de passe (admin123)"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
             <Button type="submit" className="w-full bg-slate-900 hover:bg-slate-800">
-              Login
+              Connexion
             </Button>
           </form>
         </div>
@@ -131,16 +129,16 @@ export function AdminDashboard() {
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-slate-900">Product Management</h1>
+          <h1 className="text-3xl font-bold text-slate-900">Gestion des Produits</h1>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
               <Button className="bg-amber-600 hover:bg-amber-700">
-                <Plus className="mr-2 h-4 w-4" /> Add Product
+                <Plus className="mr-2 h-4 w-4" /> Ajouter un Produit
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[500px]">
               <DialogHeader>
-                <DialogTitle>Add New Product</DialogTitle>
+                <DialogTitle>Ajouter un Nouveau Produit</DialogTitle>
               </DialogHeader>
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -149,9 +147,9 @@ export function AdminDashboard() {
                     name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Name</FormLabel>
+                        <FormLabel>Nom</FormLabel>
                         <FormControl>
-                          <Input placeholder="Product Name" {...field} />
+                          <Input placeholder="Nom du produit" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -162,9 +160,9 @@ export function AdminDashboard() {
                     name="category"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Category</FormLabel>
+                        <FormLabel>Catégorie</FormLabel>
                         <FormControl>
-                          <Input placeholder="e.g. Boubou, Senator" {...field} />
+                          <Input placeholder="ex: Boubou, Sénateur" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -175,9 +173,16 @@ export function AdminDashboard() {
                     name="price"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Price (XOF)</FormLabel>
+                        <FormLabel>Prix (XOF)</FormLabel>
                         <FormControl>
-                          <Input type="number" {...field} />
+                          {/* Fix TS2322: Explicitly handle value and onChange for number input */}
+                          <Input 
+                            type="number" 
+                            placeholder="0"
+                            {...field}
+                            value={field.value ?? ''}
+                            onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -190,7 +195,7 @@ export function AdminDashboard() {
                       <FormItem>
                         <FormLabel>Description</FormLabel>
                         <FormControl>
-                          <Textarea placeholder="Product description..." {...field} />
+                          <Textarea placeholder="Description du produit..." {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -201,7 +206,7 @@ export function AdminDashboard() {
                     name="imageUrl"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Image URL</FormLabel>
+                        <FormLabel>URL de l'image</FormLabel>
                         <FormControl>
                           <Input placeholder="https://..." {...field} />
                         </FormControl>
@@ -214,7 +219,7 @@ export function AdminDashboard() {
                     name="sizes"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Sizes (comma separated)</FormLabel>
+                        <FormLabel>Tailles (séparées par des virgules)</FormLabel>
                         <FormControl>
                           <Input placeholder="S, M, L, XL" {...field} />
                         </FormControl>
@@ -222,7 +227,7 @@ export function AdminDashboard() {
                       </FormItem>
                     )}
                   />
-                  <Button type="submit" className="w-full bg-slate-900">Create Product</Button>
+                  <Button type="submit" className="w-full bg-slate-900">Créer le Produit</Button>
                 </form>
               </Form>
             </DialogContent>
@@ -238,9 +243,9 @@ export function AdminDashboard() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Image</TableHead>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Category</TableHead>
-                  <TableHead>Price</TableHead>
+                  <TableHead>Nom</TableHead>
+                  <TableHead>Catégorie</TableHead>
+                  <TableHead>Prix</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -267,7 +272,7 @@ export function AdminDashboard() {
                 {products.length === 0 && (
                   <TableRow>
                     <TableCell colSpan={5} className="text-center py-8 text-slate-500">
-                      No products found. Add one to get started.
+                      Aucun produit trouvé. Ajoutez-en un pour commencer.
                     </TableCell>
                   </TableRow>
                 )}

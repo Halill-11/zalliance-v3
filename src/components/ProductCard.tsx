@@ -22,7 +22,7 @@ export function ProductCard({ product }: ProductCardProps) {
           {!product.inStock && (
             <div className="absolute top-2 right-2">
               <Badge variant="destructive" className="uppercase text-xs font-bold tracking-wider">
-                Sold Out
+                Épuisé
               </Badge>
             </div>
           )}
@@ -44,7 +44,7 @@ export function ProductCard({ product }: ProductCardProps) {
             {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF' }).format(product.price)}
           </p>
           <span className="text-sm text-slate-500 dark:text-slate-400 group-hover:translate-x-1 transition-transform">
-            View Details →
+            Voir Détails →
           </span>
         </CardFooter>
       </Card>

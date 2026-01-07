@@ -18,8 +18,8 @@ export function HomePage() {
         setProducts(response.items);
       } catch (err) {
         console.error('Failed to fetch products:', err);
-        setError('Failed to load collections. Please try again later.');
-        toast.error('Could not load products');
+        setError('Impossible de charger les collections. Veuillez réessayer plus tard.');
+        toast.error('Erreur lors du chargement des produits');
       } finally {
         setLoading(false);
       }
@@ -42,14 +42,14 @@ export function HomePage() {
             ZALLIANCE
           </h1>
           <p className="text-lg md:text-2xl text-slate-100 max-w-2xl mb-10 font-light drop-shadow-md">
-            Elevating African Luxury Couture. Experience the perfect blend of tradition and modern sophistication.
+            L'élégance de la haute couture africaine. Découvrez l'alliance parfaite entre tradition et sophistication moderne.
           </p>
           <Button
             size="lg"
             className="bg-amber-600 hover:bg-amber-700 text-white border-none text-lg px-8 py-6 rounded-none"
             onClick={() => document.getElementById('collections')?.scrollIntoView({ behavior: 'smooth' })}
           >
-            Discover Collection
+            Découvrir la Collection
           </Button>
         </div>
       </section>
@@ -58,14 +58,14 @@ export function HomePage() {
         <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
           <div>
             <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-2">
-              Latest Arrivals
+              Dernières Arrivées
             </h2>
             <p className="text-slate-600 dark:text-slate-400">
-              Curated pieces for the distinguished gentleman.
+              Des pièces sélectionnées pour l'homme distingué.
             </p>
           </div>
           <Button variant="outline" className="hidden md:flex gap-2">
-            View All <ArrowRight className="h-4 w-4" />
+            Voir Tout <ArrowRight className="h-4 w-4" />
           </Button>
         </div>
         {loading ? (
@@ -76,12 +76,12 @@ export function HomePage() {
           <div className="text-center py-12">
             <p className="text-red-500">{error}</p>
             <Button variant="outline" className="mt-4" onClick={() => window.location.reload()}>
-              Retry
+              Réessayer
             </Button>
           </div>
         ) : products.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-slate-500">No products found.</p>
+            <p className="text-slate-500">Aucun produit trouvé.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
@@ -92,7 +92,7 @@ export function HomePage() {
         )}
         <div className="mt-12 flex justify-center md:hidden">
           <Button variant="outline" className="w-full">
-            View All Collections
+            Voir Toutes les Collections
           </Button>
         </div>
       </main>
@@ -103,20 +103,20 @@ export function HomePage() {
             <div>
               <h3 className="font-display text-2xl font-bold mb-4">ZALLIANCE</h3>
               <p className="text-slate-400 text-sm leading-relaxed">
-                Premium African couture for the modern era. We bring you the finest fabrics and craftsmanship from across the continent.
+                Haute couture africaine premium pour l'ère moderne. Nous vous apportons les tissus les plus fins et l'artisanat de tout le continent.
               </p>
             </div>
             <div>
-              <h4 className="font-bold mb-4 text-amber-500">Customer Service</h4>
+              <h4 className="font-bold mb-4 text-amber-500">Service Client</h4>
               <ul className="space-y-2 text-sm text-slate-400">
-                <li><a href="#" className="hover:text-white transition-colors">Contact Us</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Shipping Policy</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Returns & Exchanges</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Size Guide</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Nous Contacter</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Politique de Livraison</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Retours & Échanges</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Guide des Tailles</a></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-bold mb-4 text-amber-500">Connect</h4>
+              <h4 className="font-bold mb-4 text-amber-500">Suivez-nous</h4>
               <ul className="space-y-2 text-sm text-slate-400">
                 <li><a href="#" className="hover:text-white transition-colors">Instagram</a></li>
                 <li><a href="#" className="hover:text-white transition-colors">Facebook</a></li>
@@ -126,7 +126,7 @@ export function HomePage() {
             </div>
           </div>
           <div className="border-t border-slate-800 mt-12 pt-8 text-center text-xs text-slate-500">
-            <p>&copy; {new Date().getFullYear()} ZALLIANCE. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} ZALLIANCE. Tous droits réservés.</p>
             <p className="mt-2">Built with ❤️ by Aurelia | Your AI Co-founder</p>
           </div>
         </div>
