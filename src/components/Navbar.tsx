@@ -20,13 +20,13 @@ export function Navbar() {
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link to="/" className="flex items-center gap-2 group">
-              {/* 
-                  TODO: Replace the src below with your actual logo file path (e.g., "/logo.png") 
-                  after placing the file in the public directory.
+              {/*
+                  TODO: Replace the src below with your actual logo file path or hosted URL.
+                  Currently using a data URI placeholder to ensure visibility.
               */}
-              <img 
-                src="https://placehold.co/150x40/ffffff/0F172A?text=ZALLIANCE" 
-                alt="ZALLIANCE" 
+              <img
+                src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCAxNTAgNDAiPgogIDxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNmZmZmZmYiLz4KICA8dGV4dCB4PSI1MCUiIHk9IjUwJSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjMEYxNzJBIj5aQUxMSUFOQ0U8L3RleHQ+Cjwvc3ZnPg=="
+                alt="ZALLIANCE"
                 className="h-10 w-auto object-contain"
               />
             </Link>
