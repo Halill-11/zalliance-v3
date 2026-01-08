@@ -109,7 +109,7 @@ export function userRoutes(app: Hono<{ Bindings: Env }>) {
     // Check if Base64
     if (image.startsWith('data:')) {
       try {
-        const matches = image.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+        const matches = image.match('^data:([-A-Za-z+/]+);base64,(.+)$');
         if (!matches || matches.length !== 3) {
           return bad(c, 'Invalid base64 image');
         }
