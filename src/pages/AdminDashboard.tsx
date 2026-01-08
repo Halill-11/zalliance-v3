@@ -12,14 +12,14 @@ import { Textarea } from '@/components/ui/textarea';
 import { api } from '@/lib/api-client';
 import { Product } from '@shared/types';
 import { useAppStore } from '@/lib/store';
-import { Loader2, Trash2, Plus, Lock, Pencil } from 'lucide-react';
+import { Loader2, Trash2, Plus, Lock, Pencil, LogOut } from 'lucide-react';
 import { toast } from 'sonner';
 import { ImageUpload } from '@/components/ImageUpload';
 // Schema for adding/editing a product
 const productSchema = z.object({
   name: z.string().min(2, 'Le nom est requis'),
   description: z.string().min(10, 'La description est requise'),
-  price: z.number().min(1, 'Le prix doit ��tre positif'),
+  price: z.number().min(1, 'Le prix doit être positif'),
   category: z.string().min(2, 'La catégorie est requise'),
   images: z.array(z.string()).min(1, 'Au moins une image est requise'),
   sizes: z.string().optional(), // Comma separated
@@ -37,6 +37,7 @@ const defaultValues: ProductFormValues = {
 export function AdminDashboard() {
   const isAdmin = useAppStore((s) => s.isAdmin);
   const login = useAppStore((s) => s.login);
+  const logout = useAppStore((s) => s.logout);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -99,7 +100,7 @@ export function AdminDashboard() {
           method: 'PUT',
           body: JSON.stringify(productData),
         });
-        toast.success('Produit modifié avec succès');
+        toast.success('Produit modifié avec succ��s');
       } else {
         // Create new product
         await api<Product>('/api/products', {
@@ -155,57 +156,98 @@ export function AdminDashboard() {
     <div className="min-h-screen bg-slate-50 font-sans">
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <h1 className="text-3xl font-bold text-slate-900">Gestion des Produits</h1>
-          <Dialog
-            open={isDialogOpen}
-            onOpenChange={(open) => {
-              setIsDialogOpen(open);
-              if (!open) {
-                setEditingProduct(null);
-                form.reset(defaultValues);
-              }
-            }}
-          >
-            <DialogTrigger asChild>
-              <Button className="bg-amber-600 hover:bg-amber-700">
-                <Plus className="mr-2 h-4 w-4" /> Ajouter un Produit
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle>{editingProduct ? 'Modifier le Produit' : 'Ajouter un Nouveau Produit'}</DialogTitle>
-                <DialogDescription>
-                  Remplissez les informations ci-dessous pour {editingProduct ? 'modifier' : 'cr��er'} un produit.
-                </DialogDescription>
-              </DialogHeader>
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                  <FormField
-                    control={form.control}
-                    name="images"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Images du Produit</FormLabel>
-                        <FormControl>
-                          <ImageUpload
-                            value={field.value}
-                            onChange={field.onChange}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <div className="grid grid-cols-2 gap-4">
+          <div className="flex items-center gap-3 w-full md:w-auto">
+            <Button 
+              variant="outline" 
+              onClick={() => logout()} 
+              className="text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700"
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              Se déconnecter
+            </Button>
+            <Dialog 
+              open={isDialogOpen} 
+              onOpenChange={(open) => {
+                setIsDialogOpen(open);
+                if (!open) {
+                  setEditingProduct(null);
+                  form.reset(defaultValues);
+                }
+              }}
+            >
+              <DialogTrigger asChild>
+                <Button className="bg-amber-600 hover:bg-amber-700 flex-1 md:flex-none">
+                  <Plus className="mr-2 h-4 w-4" /> Ajouter un Produit
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle>{editingProduct ? 'Modifier le Produit' : 'Ajouter un Nouveau Produit'}</DialogTitle>
+                  <DialogDescription>
+                    Remplissez les informations ci-dessous pour {editingProduct ? 'modifier' : 'créer'} un produit.
+                  </DialogDescription>
+                </DialogHeader>
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                     <FormField
                       control={form.control}
-                      name="name"
+                      name="images"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Nom</FormLabel>
+                          <FormLabel>Images du Produit</FormLabel>
                           <FormControl>
-                            <Input placeholder="Nom du produit" {...field} />
+                            <ImageUpload 
+                              value={field.value} 
+                              onChange={field.onChange}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="name"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Nom</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Nom du produit" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="category"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Catégorie</FormLabel>
+                            <FormControl>
+                              <Input placeholder="ex: Boubou, Sénateur" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <FormField
+                      control={form.control}
+                      name="price"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Prix (XOF)</FormLabel>
+                          <FormControl>
+                            <Input 
+                              type="number" 
+                              placeholder="0" 
+                              {...field}
+                              onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -213,69 +255,38 @@ export function AdminDashboard() {
                     />
                     <FormField
                       control={form.control}
-                      name="category"
+                      name="description"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Catégorie</FormLabel>
+                          <FormLabel>Description</FormLabel>
                           <FormControl>
-                            <Input placeholder="ex: Boubou, Sénateur" {...field} />
+                            <Textarea placeholder="Description du produit..." className="h-24" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
-                  </div>
-                  <FormField
-                    control={form.control}
-                    name="price"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Prix (XOF)</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="number"
-                            placeholder="0"
-                            {...field}
-                            onChange={(e) => field.onChange(e.target.valueAsNumber)}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="description"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Description</FormLabel>
-                        <FormControl>
-                          <Textarea placeholder="Description du produit..." className="h-24" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="sizes"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Tailles (séparées par des virgules)</FormLabel>
-                        <FormControl>
-                          <Input placeholder="S, M, L, XL" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <Button type="submit" className="w-full bg-slate-900">
-                    {editingProduct ? 'Enregistrer les modifications' : 'Créer le Produit'}
-                  </Button>
-                </form>
-              </Form>
-            </DialogContent>
-          </Dialog>
+                    <FormField
+                      control={form.control}
+                      name="sizes"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Tailles (séparées par des virgules)</FormLabel>
+                          <FormControl>
+                            <Input placeholder="S, M, L, XL" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <Button type="submit" className="w-full bg-slate-900">
+                      {editingProduct ? 'Enregistrer les modifications' : 'Créer le Produit'}
+                    </Button>
+                  </form>
+                </Form>
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
         <div className="bg-white rounded-lg shadow overflow-hidden">
           {loading ? (
@@ -298,8 +309,8 @@ export function AdminDashboard() {
                   <TableRow key={product.id}>
                     <TableCell>
                       <div className="h-12 w-12 rounded overflow-hidden bg-slate-100">
-                        <img
-                          src={product.images?.[0] || 'https://placehold.co/100x100?text=No+Img'}
+                        <img 
+                          src={product.images?.[0] || 'https://placehold.co/100x100?text=No+Img'} 
                           alt={product.name}
                           className="h-full w-full object-cover"
                         />
@@ -310,16 +321,16 @@ export function AdminDashboard() {
                     <TableCell>{new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF' }).format(product.price)}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                        <Button
-                          variant="ghost"
+                        <Button 
+                          variant="ghost" 
                           size="icon"
                           onClick={() => handleEdit(product)}
                           className="text-blue-600 hover:text-blue-800 hover:bg-blue-50"
                         >
                           <Pencil className="h-4 w-4" />
                         </Button>
-                        <Button
-                          variant="ghost"
+                        <Button 
+                          variant="ghost" 
                           size="icon"
                           onClick={() => handleDelete(product.id)}
                           className="text-red-500 hover:text-red-700 hover:bg-red-50"

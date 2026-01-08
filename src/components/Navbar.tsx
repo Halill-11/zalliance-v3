@@ -3,12 +3,10 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
-import { useAppStore } from '@/lib/store';
 import { CartSheet } from '@/components/CartSheet';
 export function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
-  const isAdmin = useAppStore((s) => s.isAdmin);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navLinks = [
     { name: 'Accueil', path: '/' },
@@ -32,8 +30,6 @@ export function Navbar() {
         if (element) {
           element.scrollIntoView({ behavior: 'smooth' });
         } else {
-          // Fallback: if element isn't found immediately, try navigating to hash
-          // This might happen if content loads dynamically, though in our case it's static
           window.location.hash = targetId;
         }
       } else {
@@ -54,14 +50,9 @@ export function Navbar() {
               onClick={(e) => handleNavClick(e, '/')}
               className="flex items-center gap-2 group"
             >
-              {/*
-                  LOGO CONFIGURATION:
-                  Currently using a placeholder image.
-                  Replace the src below with the actual URL of the uploaded logo image.
-              */}
-              <img
-                src="https://placehold.co/180x60/transparent/0F172A?text=ZALLIANCE"
-                alt="ZALLIANCE"
+              <img 
+                src="https://placehold.co/180x60/transparent/0F172A?text=ZALLIANCE" 
+                alt="ZALLIANCE" 
                 className="h-10 md:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
               />
             </a>
@@ -78,14 +69,6 @@ export function Navbar() {
                 {link.name}
               </a>
             ))}
-            {isAdmin && (
-              <Link
-                to="/admin"
-                className="text-sm font-medium text-amber-600 hover:text-amber-700 transition-colors"
-              >
-                Admin
-              </Link>
-            )}
           </div>
           {/* Actions */}
           <div className="flex items-center gap-2 md:gap-4">
@@ -117,15 +100,6 @@ export function Navbar() {
                         {link.name}
                       </a>
                     ))}
-                    {isAdmin && (
-                      <Link
-                        to="/admin"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        className="text-lg font-medium text-amber-600"
-                      >
-                        Admin
-                      </Link>
-                    )}
                   </div>
                 </SheetContent>
               </Sheet>
