@@ -1,6 +1,6 @@
 # ZALLIANCE - African Luxury Couture Platform
 
-[aureliabutton]
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/Halill-11/zalliance-v3)
 
 ## Overview
 
@@ -83,7 +83,7 @@ The application will be available at `http://localhost:3000`.
 
 This project is configured for seamless deployment to Cloudflare Workers.
 
-[aureliabutton]
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/Halill-11/zalliance-v3)
 
 ### Manual Deployment
 
