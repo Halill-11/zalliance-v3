@@ -66,7 +66,7 @@ export function HomePage() {
           initial={{ scale: 1.1 }}
           animate={{ scale: 1 }}
           transition={{ duration: 10, ease: "linear" }}
-          src="https://images.unsplash.com/photo-1531384441138-2736e62e0919?q=80&w=2000&auto=format&fit=crop"
+          src="src/assets/accueille.jpg"
           alt="African Luxury Fashion"
           className="absolute inset-0 h-full w-full object-cover object-center"
         />
