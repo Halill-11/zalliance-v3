@@ -57,7 +57,7 @@ export function ProductPage() {
   };
   const handleWhatsAppOrder = () => {
     if (!product) return;
-    const phoneNumber = "221770000000"; // Replace with real number
+    const phoneNumber = "221782412211"; // Replace with real number
     // Use the share proxy URL for the link preview
     // We use window.location.origin to ensure it points to the current deployment
     const shareUrl = `${window.location.origin}/api/share/product/${product.id}?img=${activeImageIndex}`;
