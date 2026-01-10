@@ -170,7 +170,7 @@ export function HomePage() {
             >
               <div className="aspect-[4/5] w-full rounded-sm overflow-hidden shadow-2xl">
                 <img 
-                  src="foote" 
+                  src="foote.jpg" 
                   alt="ZALLIANCE Atelier" 
                   className="w-full h-full object-cover"
                 />
