@@ -26,9 +26,9 @@ export function ImageUpload({ value = [], onChange, disabled, maxFiles = 5 }: Im
     const newImages: string[] = [];
     let processedCount = 0;
     filesToProcess.forEach((file) => {
-      // Limit file size to 300KB
-      if (file.size > 300 * 1024) {
-        toast.error(`Image ${file.name} is too large. Max 300KB.`);
+      // Limit file size to 3000KB
+      if (file.size > 3000 * 2048) {
+        toast.error(`Image ${file.name} is too large. Max 3000KB.`);
         processedCount++;
         if (processedCount === filesToProcess.length && newImages.length > 0) {
              onChange([...value, ...newImages]);
@@ -134,7 +134,7 @@ export function ImageUpload({ value = [], onChange, disabled, maxFiles = 5 }: Im
              Cliquez ou glissez des images ici
            </p>
            <p className="text-xs text-slate-500 dark:text-slate-400">
-             JPG, PNG, WEBP (Max 300KB)
+             JPG, PNG, WEBP (Max 3000KB)
            </p>
          </div>
        </div>
