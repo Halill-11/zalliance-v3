@@ -140,7 +140,7 @@ export function AdminDashboard() {
           <form onSubmit={handleLogin} className="space-y-4">
             <Input
               type="password"
-              placeholder="Entrez le mot de passe (admin123)"
+              placeholder="Entrez le mot de passe"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
