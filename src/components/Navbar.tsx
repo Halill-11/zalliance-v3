@@ -43,7 +43,11 @@ export function Navbar() {
     <nav className="sticky top-0 z-50 w-full border-b bg-white/90 backdrop-blur-md dark:bg-slate-950/90 dark:border-slate-800 transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
+          {<img 
+                src="zalliance.png" 
+                alt="ZALLIANCE" 
+                className="h-10 md:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+              />}
           <div className="flex-shrink-0">
             <a 
               href="/" 
