@@ -10,7 +10,7 @@ interface ImageUploadProps {
   disabled?: boolean;
   maxFiles?: number;
 }
-export function ImageUpload({ value = [], onChange, disabled, maxFiles = 5 }: ImageUploadProps) {
+export function ImageUpload({ value = [], onChange, disabled, maxFiles = 6 }: ImageUploadProps) {
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (disabled) return;
     // Calculate how many more files we can add
