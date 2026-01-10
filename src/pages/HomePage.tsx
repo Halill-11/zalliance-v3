@@ -170,7 +170,7 @@ export function HomePage() {
             >
               <div className="aspect-[4/5] w-full rounded-sm overflow-hidden shadow-2xl">
                 <img 
-                  src="https://images.unsplash.com/photo-1507120410856-1f35574c3b45?q=80&w=1000&auto=format&fit=crop" 
+                  src="foote" 
                   alt="ZALLIANCE Atelier" 
                   className="w-full h-full object-cover"
                 />
