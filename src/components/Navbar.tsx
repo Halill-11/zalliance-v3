@@ -54,11 +54,9 @@ export function Navbar() {
               onClick={(e) => handleNavClick(e, '/')}
               className="flex items-center gap-2 group"
             >
-              <img 
-                src="https://placehold.co/180x60/transparent/0F172A?text=ZALLIANCE" 
-                alt="BAYE FALL COUTURE" 
-                className="h-18 md:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
-              />
+              <span className="text-xl md:text-2xl font-bold tracking-widest text-slate-900 dark:text-white">
+                BAYE FALL COUTURE
+              </span>
             </a>
           </div>
           {/* Desktop Navigation */}
