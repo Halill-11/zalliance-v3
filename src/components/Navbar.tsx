@@ -45,7 +45,7 @@ export function Navbar() {
         <div className="flex h-16 items-center justify-between">
           {<img 
                 src="zalliance.png" 
-                alt="ZALLIANCE" 
+                alt="BAYE FALL COUTURE" 
                 className="h-14 md:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
               />}
           <div className="flex-shrink-0">
@@ -56,7 +56,7 @@ export function Navbar() {
             >
               <img 
                 src="https://placehold.co/180x60/transparent/0F172A?text=ZALLIANCE" 
-                alt="ZALLIANCE" 
+                alt="BAYE FALL COUTURE" 
                 className="h-18 md:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
               />
             </a>
