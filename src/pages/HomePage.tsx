@@ -81,7 +81,7 @@ export function HomePage() {
               variants={fadeInUp}
               className="font-display text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 tracking-tight drop-shadow-lg"
             >
-              ZALLIANCE
+              BAYE FALL COUTURE
             </motion.h1>
             <motion.p
               variants={fadeInUp}
@@ -188,7 +188,7 @@ export function HomePage() {
                 L'Art de l'Élégance Africaine
               </h2>
               <p className="text-lg text-slate-600 dark:text-slate-300 mb-6 leading-relaxed">
-                Chez ZALLIANCE, nous croyons que le vêtement est plus qu'une simple parure ; c'est une expression d'identité, d'héritage et d'ambition.
+                Chez BAYE FALL COUTURE, nous croyons que le vêtement est plus qu'une simple parure ; c'est une expression d'identité, d'héritage et d'ambition.
               </p>
               <p className="text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">
                 Fondée avec la vision de redéfinir le luxe africain, notre maison combine des techniques de couture traditionnelles avec des coupes contemporaines. Chaque pièce est méticuleusement conçue pour l'homme moderne qui valorise l'authenticité sans compromettre le style.
@@ -228,7 +228,7 @@ export function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             <div>
-              <h3 className="font-display text-2xl font-bold mb-4">ZALLIANCE</h3>
+              <h3 className="font-display text-2xl font-bold mb-4">BAYE FALL COUTURE</h3>
               <p className="text-slate-400 text-sm leading-relaxed">
                 Haute couture africaine premium pour l'ère moderne. Nous vous apportons les tissus les plus fins et l'artisanat de tout le continent.
               </p>
