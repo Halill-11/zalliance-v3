@@ -4,7 +4,7 @@
  */
  {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "zalliance-couture-wlg8w2um",
+	"name": "bayefallcouture",
 	"main": "worker/index.ts",
 	"compatibility_date": "2025-04-24",
 	"assets": {
