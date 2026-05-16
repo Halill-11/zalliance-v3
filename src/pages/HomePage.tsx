@@ -253,7 +253,7 @@ export function HomePage() {
             </div>
           </div>
           <div className="border-t border-slate-800 mt-12 pt-8 text-center text-xs text-slate-500">
-            <p>&copy; {new Date().getFullYear()} ZALLIANCE. Tous droits réservés.</p>
+            <p>&copy; {new Date().getFullYear()} BAYE FALL COUTURE. Tous droits réservés.</p>
             <p className="mt-2">Developpé par DIGITALL +22178242211</p>
           </div>
         </div>
