@@ -43,18 +43,20 @@ export function Navbar() {
     <nav className="sticky top-0 z-50 w-full border-b bg-white/90 backdrop-blur-md dark:bg-slate-950/90 dark:border-slate-800 transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-          {<img 
-                src="zalliance.png" 
-                alt="BAYE FALL COUTURE" 
-                className="h-14 md:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
-              />}
+          
           <div className="flex-shrink-0">
             <a 
               href="/" 
               onClick={(e) => handleNavClick(e, '/')}
               className="flex items-center gap-2 group"
             >
-              <span className="text-xl md:text-2xl font-bold tracking-widest text-slate-900 dark:text-white">
+              {<img 
+                src="zalliance.png" 
+                alt="BAYE FALL COUTURE" 
+                className="h-18 md:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+              />}
+              
+              <span className="text-l md:text-xl font-bold tracking-widest text-slate-900 dark:text-white">
                 BAYE FALL COUTURE
               </span>
             </a>
